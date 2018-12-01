@@ -1,0 +1,22 @@
+<html>
+	<head>
+		<script src="http://code.responsivevoice.org/responsivevoice.js"></script>
+	</head>
+	<body>
+		<script>
+			var date=new Date();
+			function handleOrientation(event) {
+				var alpha    = event.alpha;
+				var beta     = event.beta;
+				var gamma    = event.gamma;
+				if (alpha>=20 || beta>=20 || gamma>=20){
+					responsiveVoice.speak(date.toLocaleTimeString(), "Polish Female");
+				}
+			}
+
+  			window.addEventListener("deviceorientation", handleOrientation, true);
+			  responsiveVoice.speak(date.toLocaleTimeString(), "Polish Female");
+
+		</script>
+	</body>
+</html>
