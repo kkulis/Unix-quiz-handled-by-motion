@@ -1,21 +1,31 @@
 <html>
 	<head>
 		<script src="https://code.responsivevoice.org/responsivevoice.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
 	</head>
 	<body>
+			<div id="main">
+			</div>
 		<script>
-			var date=new Date();
-			function handleOrientation(event) {
-				var alpha    = event.alpha;
-				var beta     = event.beta;
-				var gamma    = event.gamma;
-				if (alpha>=20 || beta>=20 || gamma>=20){
+			function handleMotion(event) {
+				var date=new Date();
+				var div = document.createElement("div");
+				var acceleration = event.acceleration;
+				div.innerHTML = "x : " + acceleration.x + "\n";
+				div.innerHTML += "y: " + acceleration.y + "\n";
+				div.innerHTML += "z: " + acceleration.z + "\n";
+				
+				if (acceleration.x>10 || acceleration.y>10 || acceleration.z>10){
 					responsiveVoice.speak(date.toLocaleTimeString(), "Polish Female");
 				}
+				
+				document.getElementById("main").appendChild(div);
 			}
 
-  			window.addEventListener("deviceorientation", handleOrientation, true);
-			  responsiveVoice.speak(date.toLocaleTimeString(), "Polish Female");
+  			 window.addEventListener("devicemotion", _.throttle(handleMotion,800), true);
+			
+			
+
 
 		</script>
 	</body>
