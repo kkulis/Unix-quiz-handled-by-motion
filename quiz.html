@@ -15,7 +15,7 @@
                     {"pytanie":"what love is?", "odpowiedz":"tak"},
                     ];
             var aktualnePytanie = null;
-      var currentQuestionIndex = 0;
+      var currentQuestionIndex = -1;
  
             function handleMotion(event) {
                
@@ -88,7 +88,7 @@
           window.dispatchEvent(new Event("endGame"));
           return;
         }
-       
+        currentQuestionIndex++;
         if(currentQuestionIndex != 0){
           responsiveVoice.speak("Next question....", language);
         }
