@@ -1,114 +1,138 @@
 <html>
-    <head>
-        <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
-    </head>
-    <body>
-            <div id="main">
-        <button id="startBtn">Start</button>
-      </div>
  
-    <script>
-      var language = "UK English Male";
-            var pytania=
-                    [{"pytanie":"what is love?", "odpowiedz":"nie"},
-                    {"pytanie":"what love is?", "odpowiedz":"tak"},
-                    ];
-            var aktualnePytanie = null;
-      var currentQuestionIndex = -1;
+<head>
+  <script src="https://code.responsivevoice.org/responsivevoice.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
+</head>
  
-            function handleMotion(event) {
-               
-        var div = document.createElement("div");
-                var acceleration = event.acceleration;
-                div.innerHTML = "x : " + acceleration.x + "\n";
-                div.innerHTML += "y: " + acceleration.y + "\n";
-                div.innerHTML += "z: " + acceleration.z + "\n";
-               
-                if (acceleration.y>10){
-                    responsiveVoice.speak("tak", language);
-                    if(aktualnePytanie.odpowiedz == "tak"){
-                        responsiveVoice.speak("dobra odpowiedź", language);
-           
-            var correctAnswerEvent = new Event("correctAnswer");
-                        window.dispatchEvent(correctAnswerEvent);
+<body>
+  <div id="main">
+    <button id="startBtn">Start</button>
  
-                    }else{
-                        responsiveVoice.speak("zła odpowiedź", language);
+    <button id="yesBtn">YES</button>
+    <button id="noBtn">NO</button>
+  </div>
  
-            var incorrectAnswerEvent = new Event("incorrectAnswer");
-            window.dispatchEvent(incorrectAnswerEvent);
-                    }
-                }
-                if (acceleration.x>10){
-                    responsiveVoice.speak("nie", language);
+  <script>
+    var language = "UK English Male";
+    var pytania = [{
+        "pytanie": "what is love?",
+        "odpowiedz": "nie"
+      },
+      {
+        "pytanie": "what love is?",
+        "odpowiedz": "tak"
+      },
+    ];
+    var aktualnePytanie = null;
+    var currentQuestionIndex = -1;
  
-          if(aktualnePytanie.odpowiedz == "nie"){
-                        responsiveVoice.speak("dobra odpowiedź", language);
-           
-            var correctAnswerEvent = new Event("correctAnswer");
-                        window.dispatchEvent(correctAnswerEvent);
+    function handleMotion(event) {
  
-                    }else{
-                        responsiveVoice.speak("zła odpowiedź", language);
+      var div = document.createElement("div");
+      var acceleration = event.acceleration;
+      div.innerHTML = "x : " + acceleration.x + "\n";
+      div.innerHTML += "y: " + acceleration.y + "\n";
+      div.innerHTML += "z: " + acceleration.z + "\n";
  
-            var incorrectAnswerEvent = new Event("incorrectAnswer");
-            window.dispatchEvent(incorrectAnswerEvent);
-                    }
-                }
-               
-                document.getElementById("main").appendChild(div);
-            }
-      var deviceMovedThrottled = _.throttle(handleMotion,800);
+      if (acceleration.y > 10) {
+        responsiveVoice.speak("tak", language);
+        if (aktualnePytanie.odpowiedz == "tak") {
+          responsiveVoice.speak("dobra odpowiedź", language);
  
-      function addMotionListener(){
-        window.addEventListener("devicemotion", deviceMovedThrottled, true);
-      };
+          var correctAnswerEvent = new Event("correctAnswer");
+          window.dispatchEvent(correctAnswerEvent);
  
-      function removeMotionListener(){
-        window.removeEventListener("devicemotion", deviceMovedThrottled, true);
+        } else {
+          responsiveVoice.speak("zła odpowiedź", language);
+ 
+          var incorrectAnswerEvent = new Event("incorrectAnswer");
+          window.dispatchEvent(incorrectAnswerEvent);
+        }
+      }
+      if (acceleration.x > 10) {
+        responsiveVoice.speak("nie", language);
+ 
+        if (aktualnePytanie.odpowiedz == "nie") {
+          responsiveVoice.speak("dobra odpowiedź", language);
+ 
+          var correctAnswerEvent = new Event("correctAnswer");
+          window.dispatchEvent(correctAnswerEvent);
+ 
+        } else {
+          responsiveVoice.speak("zła odpowiedź", language);
+ 
+          var incorrectAnswerEvent = new Event("incorrectAnswer");
+          window.dispatchEvent(incorrectAnswerEvent);
+        }
       }
  
-      var startBtn = document.getElementById("startBtn");
+      document.getElementById("main").appendChild(div);
+    }
+    var deviceMovedThrottled = _.throttle(handleMotion, 800);
  
-      startBtn.addEventListener("click", function(){
-        //run the QUIZ
-        aktualnePytanie = pytania[currentQuestionIndex];
-        responsiveVoice.speak("Hello on the other sideeee...", language);
-       
-        var correctAnswerEvent = new Event("correctAnswer"); //answer to question "-1" is correct, so we can move to question 0 (aka: start the game)
-        responsiveVoice.speak("First question", language);
-        window.dispatchEvent(correctAnswerEvent);
-      });
+    function addMotionListener() {
+      window.addEventListener("devicemotion", deviceMovedThrottled, true);
+    };
  
-      window.addEventListener("correctAnswer", function(){
-        removeMotionListener();
+    function removeMotionListener() {
+      window.removeEventListener("devicemotion", deviceMovedThrottled, true);
+    }
  
-        if(currentQuestionIndex == pytania.length){
-          window.dispatchEvent(new Event("endGame"));
-          return;
-        }
-        currentQuestionIndex++;
-        if(currentQuestionIndex != 0){
-          responsiveVoice.speak("Next question....", language);
-        }
+    var startBtn = document.getElementById("startBtn");
  
-        aktualnePytanie = pytania[currentQuestionIndex];
-        responsiveVoice.speak(aktualnePytanie.pytanie, language);
-       
-        addMotionListener();
-      });
+    startBtn.addEventListener("click", function () {
+      //run the QUIZ
+      responsiveVoice.speak("Hello on the other side...", language);
  
-      window.addEventListener("incorrectAnswer", function(){
-        removeMotionListener()
-        responsiveVoice.speak("Wrong answer, try again...", language);
-        responsiveVoice.speak(aktualnePytanie.pytanie, language);
-        addMotionListener();
-      });
+      var correctAnswerEvent = new Event("correctAnswer"); //answer to question "-1" is correct, so we can move to question 0 (aka: start the game)
+      responsiveVoice.speak("First question", language);
+      window.dispatchEvent(correctAnswerEvent);
+    });
  
-      window.addEventListener("endGame", function(){
-        responsiveVoice.speak("Congratulations, you answered correctly to all questions. Good job, go to hell.", language);
-      });
-        </script>
-    </body>
+    window.addEventListener("correctAnswer", function () {
+      removeMotionListener();
+      currentQuestionIndex++;
+     
+      if (currentQuestionIndex >= pytania.length) {
+        window.dispatchEvent(new Event("endGame"));
+        return;
+      }
+     
+      if (currentQuestionIndex != 0) {
+        responsiveVoice.speak("Next question....", language);
+      }
+ 
+      aktualnePytanie = pytania[currentQuestionIndex];
+      responsiveVoice.speak(aktualnePytanie.pytanie, language);
+ 
+      addMotionListener();
+    });
+ 
+    window.addEventListener("incorrectAnswer", function () {
+      removeMotionListener()
+      responsiveVoice.speak("Wrong answer, try again...", language);
+      responsiveVoice.speak(aktualnePytanie.pytanie, language);
+      addMotionListener();
+    });
+ 
+    window.addEventListener("endGame", function () {
+      responsiveVoice.speak("Congratulations, you answered correctly to all questions. Good job, go to hell.",
+        language);
+    });
+ 
+    var yesBtn = document.getElementById("yesBtn")
+    yesBtn.addEventListener("click", function(){
+      console.log("yesBtn");
+      window.dispatchEvent(new CustomEvent("devicemotion", { acceleration: { y: 15 }}))
+    })
+ 
+    var noBtn = document.getElementById("noBtn");
+    noBtn.addEventListener("click", function(){
+      console.log("noBtn");
+      window.dispatchEvent(new CustomEvent("devicemotion", { acceleration: { x: 15 }}))
+    });
+  </script>
+</body>
+ 
 </html>
