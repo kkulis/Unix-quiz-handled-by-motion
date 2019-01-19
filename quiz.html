@@ -26,6 +26,7 @@
     ];
     var aktualnePytanie = null;
     var currentQuestionIndex = -1;
+    var result = 0;
  
     function handleMotion(event) {
  
@@ -38,14 +39,10 @@
       if (acceleration.y > 10) {
         responsiveVoice.speak("tak", language);
         if (aktualnePytanie.odpowiedz == "tak") {
-          responsiveVoice.speak("dobra odpowiedź", language);
- 
           var correctAnswerEvent = new Event("correctAnswer");
           window.dispatchEvent(correctAnswerEvent);
  
         } else {
-          responsiveVoice.speak("zła odpowiedź", language);
- 
           var incorrectAnswerEvent = new Event("incorrectAnswer");
           window.dispatchEvent(incorrectAnswerEvent);
         }
@@ -54,14 +51,10 @@
         responsiveVoice.speak("nie", language);
  
         if (aktualnePytanie.odpowiedz == "nie") {
-          responsiveVoice.speak("dobra odpowiedź", language);
- 
           var correctAnswerEvent = new Event("correctAnswer");
           window.dispatchEvent(correctAnswerEvent);
  
         } else {
-          responsiveVoice.speak("zła odpowiedź", language);
- 
           var incorrectAnswerEvent = new Event("incorrectAnswer");
           window.dispatchEvent(incorrectAnswerEvent);
         }
@@ -79,21 +72,27 @@
       window.removeEventListener("devicemotion", deviceMovedThrottled, true);
     }
  
-    var startBtn = document.getElementById("startBtn");
- 
-    startBtn.addEventListener("click", function () {
-      //run the QUIZ
-      responsiveVoice.speak("Hello on the other side...", language);
- 
-      var correctAnswerEvent = new Event("correctAnswer"); //answer to question "-1" is correct, so we can move to question 0 (aka: start the game)
-      responsiveVoice.speak("First question", language);
-      window.dispatchEvent(correctAnswerEvent);
-    });
- 
     window.addEventListener("correctAnswer", function () {
       removeMotionListener();
+      responsiveVoice.speak("Good answer, you have a point!", language);
+      result++;
+      window.dispatchEvent(new Event("nextQuestion"));
+    });
+ 
+    window.addEventListener("incorrectAnswer", function () {
+      removeMotionListener()
+      responsiveVoice.speak("Wrong answer, sorry you dirty little shit, but you SUCK.", language);
+      window.dispatchEvent(new Event("nextQuestion"));
+    });
+ 
+    window.addEventListener("endGame", function () {
+      responsiveVoice.speak("Congratulations, you finished the quiz.", language);
+      responsiveVoice.speak("You have: " + result.toString() + " points", language);
+      responsiveVoice.speak("and now, go to hell with your poor result, you son of a bitch", language);
+    });
+ 
+    window.addEventListener("nextQuestion", function(){
       currentQuestionIndex++;
-     
       if (currentQuestionIndex >= pytania.length) {
         window.dispatchEvent(new Event("endGame"));
         return;
@@ -102,23 +101,11 @@
       if (currentQuestionIndex != 0) {
         responsiveVoice.speak("Next question....", language);
       }
- 
+     
       aktualnePytanie = pytania[currentQuestionIndex];
       responsiveVoice.speak(aktualnePytanie.pytanie, language);
  
       addMotionListener();
-    });
- 
-    window.addEventListener("incorrectAnswer", function () {
-      removeMotionListener()
-      responsiveVoice.speak("Wrong answer, try again...", language);
-      responsiveVoice.speak(aktualnePytanie.pytanie, language);
-      addMotionListener();
-    });
- 
-    window.addEventListener("endGame", function () {
-      responsiveVoice.speak("Congratulations, you answered correctly to all questions. Good job, go to hell.",
-        language);
     });
  
     var yesBtn = document.getElementById("yesBtn")
@@ -131,6 +118,16 @@
     noBtn.addEventListener("click", function(){
       console.log("noBtn");
       window.dispatchEvent(new CustomEvent("devicemotion", { acceleration: { x: 15 }}))
+    });
+ 
+    var startBtn = document.getElementById("startBtn");
+    startBtn.addEventListener("click", function () {
+      //run the QUIZ
+      responsiveVoice.speak("Hello on the other side...", language);
+      result = 0;
+      var correctAnswerEvent = new Event("nextQuestion"); //answer to question "-1" is correct, so we can move to question 0 (aka: start the game)
+      responsiveVoice.speak("First question", language);
+      window.dispatchEvent(correctAnswerEvent);
     });
   </script>
 </body>
