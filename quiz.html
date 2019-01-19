@@ -125,6 +125,7 @@
       //run the QUIZ
       responsiveVoice.speak("Hello on the other side...", language);
       result = 0;
+      currentQuestionIndex=0;
       var correctAnswerEvent = new Event("nextQuestion"); //answer to question "-1" is correct, so we can move to question 0 (aka: start the game)
       responsiveVoice.speak("First question", language);
       window.dispatchEvent(correctAnswerEvent);
