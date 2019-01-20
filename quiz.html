@@ -7,10 +7,10 @@
  
 <body>
   <div id="main">
-    <button id="startBtn">Start</button>
+    <button id="startBtn" style="font-size: 40px">Start</button>
  
-    <button id="yesBtn">CorrectAnswer</button>
-    <button id="noBtn">WrongAnswer</button>
+    <button id="yesBtn" style="display: none">CorrectAnswer</button>
+    <button id="noBtn" style="display: none">WrongAnswer</button>
   </div>
  
   <script>
@@ -32,7 +32,7 @@
  
       var div = document.createElement("div");
       var acceleration = event.acceleration;
-      div.innerHTML = "x : " + acceleration.x + "\n";
+      div.innerHTML = "x: " + acceleration.x + "\n";
       div.innerHTML += "y: " + acceleration.y + "\n";
       div.innerHTML += "z: " + acceleration.z + "\n";
  
@@ -90,6 +90,8 @@
       responsiveVoice.speak("You have: " + result.toString() + " points", language);
       responsiveVoice.speak("Bye bye.", language);
       startBtn.style.display = 'inline-block';
+      yesBtn.style.display = 'none';
+      noBtn.style.display = 'none';
     });
  
     window.addEventListener("nextQuestion", function(){
@@ -124,8 +126,10 @@
     var startBtn = document.getElementById("startBtn");
     startBtn.addEventListener("click", function () {
       startBtn.style.display = 'none'
+      yesBtn.style.display = 'inline-block';
+      noBtn.style.display = 'inline-block';
       //run the QUIZ
-      responsiveVoice.speak("Hello on the other side...", language);
+      responsiveVoice.speak("Hello in IT-QUIZ", language);
       result = 0;
       currentQuestionIndex = -1;
       var correctAnswerEvent = new Event("nextQuestion"); //answer to question "-1" is correct, so we can move to question 0 (aka: start the game)
