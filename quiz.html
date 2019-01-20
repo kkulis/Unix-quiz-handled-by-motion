@@ -9,8 +9,8 @@
   <div id="main">
     <button id="startBtn">Start</button>
  
-    <button id="yesBtn">YES</button>
-    <button id="noBtn">NO</button>
+    <button id="yesBtn">CorrectAnswer</button>
+    <button id="noBtn">WrongAnswer</button>
   </div>
  
   <script>
@@ -37,7 +37,7 @@
       div.innerHTML += "z: " + acceleration.z + "\n";
  
       if (acceleration.y > 10) {
-        responsiveVoice.speak("tak", language);
+        responsiveVoice.speak("You answered YES", language);
         if (aktualnePytanie.odpowiedz == "tak") {
           var correctAnswerEvent = new Event("correctAnswer");
           window.dispatchEvent(correctAnswerEvent);
@@ -48,7 +48,7 @@
         }
       }
       if (acceleration.x > 10) {
-        responsiveVoice.speak("nie", language);
+        responsiveVoice.speak("You answered NO", language);
  
         if (aktualnePytanie.odpowiedz == "nie") {
           var correctAnswerEvent = new Event("correctAnswer");
@@ -74,21 +74,22 @@
  
     window.addEventListener("correctAnswer", function () {
       removeMotionListener();
-      responsiveVoice.speak("Good answer, you have a point!", language);
+      responsiveVoice.speak("Good answer. One point.", language);
       result++;
       window.dispatchEvent(new Event("nextQuestion"));
     });
  
     window.addEventListener("incorrectAnswer", function () {
       removeMotionListener()
-      responsiveVoice.speak("Wrong answer, sorry you dirty little shit, but you SUCK.", language);
+      responsiveVoice.speak("Wrong answer", language);
       window.dispatchEvent(new Event("nextQuestion"));
     });
  
     window.addEventListener("endGame", function () {
       responsiveVoice.speak("Congratulations, you finished the quiz.", language);
       responsiveVoice.speak("You have: " + result.toString() + " points", language);
-      responsiveVoice.speak("and now, go to hell with your poor result, you son of a bitch", language);
+      responsiveVoice.speak("Bye bye.", language);
+      startBtn.style.display = 'inline-block';
     });
  
     window.addEventListener("nextQuestion", function(){
@@ -111,21 +112,22 @@
     var yesBtn = document.getElementById("yesBtn")
     yesBtn.addEventListener("click", function(){
       console.log("yesBtn");
-      window.dispatchEvent(new CustomEvent("devicemotion", { acceleration: { y: 15 }}))
+      window.dispatchEvent(new Event("correctAnswer"))
     })
  
     var noBtn = document.getElementById("noBtn");
     noBtn.addEventListener("click", function(){
       console.log("noBtn");
-      window.dispatchEvent(new CustomEvent("devicemotion", { acceleration: { x: 15 }}))
+      window.dispatchEvent(new Event("incorrectAnswer"))
     });
  
     var startBtn = document.getElementById("startBtn");
     startBtn.addEventListener("click", function () {
+      startBtn.style.display = 'none'
       //run the QUIZ
       responsiveVoice.speak("Hello on the other side...", language);
       result = 0;
-      currentQuestionIndex=-1;
+      currentQuestionIndex = -1;
       var correctAnswerEvent = new Event("nextQuestion"); //answer to question "-1" is correct, so we can move to question 0 (aka: start the game)
       responsiveVoice.speak("First question", language);
       window.dispatchEvent(correctAnswerEvent);
