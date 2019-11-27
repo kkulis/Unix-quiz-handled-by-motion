@@ -36,7 +36,7 @@
       div.innerHTML += "y: " + acceleration.y + "\n";
       div.innerHTML += "z: " + acceleration.z + "\n";
  
-      if (acceleration.y > 10) {
+      if (acceleration.y > 5) {
         responsiveVoice.speak("You answered YES", language);
         if (aktualnePytanie.odpowiedz == "tak") {
           var correctAnswerEvent = new Event("correctAnswer");
@@ -47,7 +47,7 @@
           window.dispatchEvent(incorrectAnswerEvent);
         }
       }
-      if (acceleration.x > 10) {
+      if (acceleration.x > 5) {
         responsiveVoice.speak("You answered NO", language);
  
         if (aktualnePytanie.odpowiedz == "nie") {
