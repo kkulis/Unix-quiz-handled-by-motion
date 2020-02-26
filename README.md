@@ -1,1 +1,1 @@
-# tap-o-clock
+# Unix quiz handled by motion
